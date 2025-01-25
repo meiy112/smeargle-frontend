@@ -1,0 +1,10 @@
+.side-bar {
+  border-right: 1px solid var(--border);
+  padding: 1em 0.9em;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.side-bar__buttons {
+}
