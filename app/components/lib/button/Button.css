@@ -1,0 +1,12 @@
+.button {
+  width: 2em;
+  height: 2em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--border-radius);
+}
+
+.button--outlined {
+  border: 1px solid var(--border);
+}

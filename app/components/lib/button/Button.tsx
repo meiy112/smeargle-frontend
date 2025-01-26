@@ -1,8 +1,22 @@
-const Button = () => {
+"use client";
+import "./Button.css";
+
+const Button = ({
+  icon,
+  onClick,
+  outlined,
+}: {
+  icon: string;
+  onClick: () => void;
+  outlined?: boolean;
+}) => {
   return (
-    <div>
-      <div>Hi</div>
-    </div>
+    <button
+      onClick={onClick}
+      className={`button ${outlined && "button--outlined"}`}
+    >
+      <img src={icon} alt={icon} />
+    </button>
   );
 };
 
