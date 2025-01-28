@@ -17,7 +17,7 @@ const Sidebar = () => {
   };
 
   return (
-    <div className="h-[100%] side-bar">
+    <div className="relative h-[100%] side-bar">
       <img src="./logo.svg" alt="Logo" />
       <div className="side-bar__buttons">
         <Button icon="./plus.svg" onClick={onAddButtonClick} outlined={true} />

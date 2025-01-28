@@ -7,6 +7,9 @@
   --foreground: #ffffff;
   --border: #28272c;
   --border-radius: 9px;
+  --border-radius-large: 20px;
+  --canvas-bg: #fff;
+  --canvas-menu-bg: #222d33;
 }
 
 @media (prefers-color-scheme: dark) {
