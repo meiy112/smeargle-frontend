@@ -11,7 +11,8 @@
   --border-radius__s: 7px;
   --canvas-bg: #fff;
   --canvas-menu-bg: #222d33;
-  --hover-bg: rgba(255, 255, 255, 0.25);
+  --hover-bg: rgba(255, 255, 255, 0.15);
+  --purple: #855fff;
 }
 
 @media (prefers-color-scheme: dark) {
