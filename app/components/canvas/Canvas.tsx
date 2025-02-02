@@ -5,6 +5,7 @@ import "./Canvas.css";
 import { Tool, Stroke, Action, Layer } from "./Canvas.d";
 import ColorPicker from "./ColorPicker";
 import Button from "../lib/button/Button";
+import Slider from "../lib/slider/Slider";
 
 const LAYERS = [
   { title: "Box", index: 0 },
@@ -361,6 +362,13 @@ const Canvas = () => {
             changeOpacity={true}
           />
           <ColorPicker color={color} setColor={setColor} />
+          <Slider
+            value={lineWidth}
+            max={10}
+            min={1}
+            handleChange={(value: number) => setLineWidth(value)}
+            width="7em"
+          />
         </div>
         <div className="bg-[var(--canvas-bg)] h-[100%] w-[100%] rounded-[10px] flex items-center justify-center relative overflow-hidden">
           <canvas
