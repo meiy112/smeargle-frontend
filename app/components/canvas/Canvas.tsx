@@ -14,7 +14,6 @@ const LAYERS = [
 
 const Canvas = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const parentRef = useRef<HTMLDivElement>(null);
   const [layers, setLayers] = useState<Layer[]>([]);
   const [currentLayer, setCurrentLayer] = useState(0);
   const [tool, setTool] = useState<Tool>("draw");
@@ -29,40 +28,22 @@ const Canvas = () => {
 
   useEffect(() => {
     if (canvasRef.current) {
-      const initLayers = Array.from({ length: 5 }, () => {
-        const canvas = document.createElement("canvas");
-        canvas.width = canvasRef.current!.width;
-        canvas.height = canvasRef.current!.height;
-        const ctx = canvas.getContext("2d")!;
-        return { canvas, ctx };
-      });
+      const parent = canvasRef.current.parentElement;
+      if (parent) {
+        canvasRef.current.width = parent.offsetWidth;
+        canvasRef.current.height = parent.offsetHeight;
+        const initLayers = Array.from({ length: 5 }, () => {
+          const canvas = document.createElement("canvas");
+          canvas.width = canvasRef.current!.width;
+          canvas.height = canvasRef.current!.height;
+          const ctx = canvas.getContext("2d")!;
+          return { canvas, ctx };
+        });
 
-      setLoading(false);
-      setLayers(initLayers);
-    }
-  }, []);
-
-  useEffect(() => {
-    const resizeCanvas = () => {
-      if (canvasRef.current && parentRef.current) {
-        canvasRef.current.width = parentRef.current.clientWidth;
-        canvasRef.current.height = parentRef.current.clientHeight;
+        setLoading(false);
+        setLayers(initLayers);
       }
-    };
-
-    resizeCanvas();
-
-    const observer = new ResizeObserver(resizeCanvas);
-    if (parentRef.current) {
-      observer.observe(parentRef.current);
     }
-
-    window.addEventListener("resize", resizeCanvas);
-
-    return () => {
-      observer.disconnect();
-      window.removeEventListener("resize", resizeCanvas);
-    };
   }, []);
 
   const draw = useCallback(
@@ -393,10 +374,7 @@ const Canvas = () => {
             width="7em"
           />
         </div>
-        <div
-          ref={parentRef}
-          className="bg-[var(--canvas-bg)] bg-red-300 h-[100%] w-[100%] rounded-[10px] flex items-center justify-center relative overflow-hidden"
-        >
+        <div className="bg-[var(--canvas-bg)] h-[100%] w-[100%] rounded-[10px] flex items-center justify-center relative overflow-hidden">
           <canvas
             ref={canvasRef}
             width="100%"
