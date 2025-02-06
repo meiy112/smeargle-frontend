@@ -2,7 +2,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import Dropdown from "../lib/dropdown/Dropdown";
 import "./Canvas.css";
-import { Tool, Stroke, Action, Layer } from "./Canvas.d";
 import ColorPicker from "./ColorPicker";
 import Button from "../lib/button/Button";
 import Slider from "../lib/slider/Slider";
@@ -15,15 +14,14 @@ const LAYERS = [
 
 const Canvas = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const [currentLayer, setCurrentLayer] = useState({ title: "Box", index: 0 });
+  const parentRef = useRef<HTMLDivElement>(null);
   const [layers, setLayers] = useState<Layer[]>([]);
+  const [currentLayer, setCurrentLayer] = useState(0);
   const [tool, setTool] = useState<Tool>("draw");
   const [isDrawing, setIsDrawing] = useState(false);
   const [color, setColor] = useState("#000000");
   const [lineWidth, setLineWidth] = useState(5);
-  const [strokes, setStrokes] = useState<Stroke[]>([]);
-  const [selectedStroke, setSelectedStroke] = useState<Stroke | null>(null);
-  const [movingStroke, setMovingStroke] = useState(false);
+  const [actions, setActions] = useState<Action[]>([]);
   const lastPosition = useRef<[number, number] | null>(null);
   const [undoStack, setUndoStack] = useState<Action[]>([]);
   const [redoStack, setRedoStack] = useState<Action[]>([]);
@@ -31,7 +29,6 @@ const Canvas = () => {
 
   useEffect(() => {
     if (canvasRef.current) {
-      setLoading(true);
       const initLayers = Array.from({ length: 5 }, () => {
         const canvas = document.createElement("canvas");
         canvas.width = canvasRef.current!.width;
@@ -40,19 +37,41 @@ const Canvas = () => {
         return { canvas, ctx };
       });
 
-      const parent = canvasRef.current.parentElement;
-      if (parent) {
-        canvasRef.current.width = parent.offsetWidth;
-        canvasRef.current.height = parent.offsetHeight;
-      }
-
-      setLayers(initLayers);
       setLoading(false);
+      setLayers(initLayers);
     }
   }, []);
 
+  useEffect(() => {
+    const resizeCanvas = () => {
+      if (canvasRef.current && parentRef.current) {
+        canvasRef.current.width = parentRef.current.clientWidth;
+        canvasRef.current.height = parentRef.current.clientHeight;
+      }
+    };
+
+    resizeCanvas();
+
+    const observer = new ResizeObserver(resizeCanvas);
+    if (parentRef.current) {
+      observer.observe(parentRef.current);
+    }
+
+    window.addEventListener("resize", resizeCanvas);
+
+    return () => {
+      observer.disconnect();
+      window.removeEventListener("resize", resizeCanvas);
+    };
+  }, []);
+
   const draw = useCallback(
-    (ctx: CanvasRenderingContext2D, x: number, y: number) => {
+    (
+      ctx: CanvasRenderingContext2D,
+      x: number,
+      y: number,
+      isEraser: boolean
+    ) => {
       if (!lastPosition.current) {
         lastPosition.current = [x, y];
         return;
@@ -61,25 +80,27 @@ const Canvas = () => {
       ctx.beginPath();
       ctx.moveTo(lastPosition.current[0], lastPosition.current[1]);
       ctx.lineTo(x, y);
-      ctx.strokeStyle = color;
+      ctx.strokeStyle = isEraser ? "rgba(0,0,0,1)" : color;
       ctx.lineWidth = lineWidth;
       ctx.lineCap = "round";
+      ctx.globalCompositeOperation = isEraser
+        ? "destination-out"
+        : "source-over";
       ctx.stroke();
+      ctx.globalCompositeOperation = "source-over";
 
       lastPosition.current = [x, y];
     },
     [color, lineWidth]
   );
 
-  const erase = useCallback(
-    (ctx: CanvasRenderingContext2D, x: number, y: number) => {
-      ctx.clearRect(x - lineWidth / 2, y - lineWidth / 2, lineWidth, lineWidth);
-    },
-    [lineWidth]
-  );
-
   const bucketFill = useCallback(
-    (ctx: CanvasRenderingContext2D, startX: number, startY: number) => {
+    (
+      ctx: CanvasRenderingContext2D,
+      startX: number,
+      startY: number,
+      fillColor: string
+    ) => {
       const imageData = ctx.getImageData(
         0,
         0,
@@ -87,17 +108,20 @@ const Canvas = () => {
         ctx.canvas.height
       );
       const targetColor = getPixel(imageData, startX, startY);
-      const fillColor = hexToRgb(color);
+      const fillColorRgb = hexToRgb(fillColor);
 
-      if (colorsMatch(targetColor, fillColor)) return;
+      if (colorsMatch(targetColor, fillColorRgb)) return;
 
       const pixelsToCheck = [[startX, startY]];
+      const filledPixels: [number, number][] = [];
+
       while (pixelsToCheck.length > 0) {
         const [x, y] = pixelsToCheck.pop()!;
         const currentColor = getPixel(imageData, x, y);
 
         if (colorsMatch(currentColor, targetColor)) {
-          setPixel(imageData, x, y, fillColor);
+          setPixel(imageData, x, y, fillColorRgb);
+          filledPixels.push([x, y]);
 
           if (x > 0) pixelsToCheck.push([x - 1, y]);
           if (y > 0) pixelsToCheck.push([x, y - 1]);
@@ -107,191 +131,10 @@ const Canvas = () => {
       }
 
       ctx.putImageData(imageData, 0, 0);
+      return filledPixels;
     },
-    [color]
+    []
   );
-
-  const handleMouseDown = (e: React.MouseEvent<HTMLCanvasElement>) => {
-    const rect = canvasRef.current!.getBoundingClientRect();
-    const x = Math.floor(e.clientX - rect.left);
-    const y = Math.floor(e.clientY - rect.top);
-
-    setIsDrawing(true);
-    lastPosition.current = [x, y];
-
-    if (tool === "select") {
-      const clickedStroke = strokes.find((stroke) => {
-        return stroke.path.some(
-          ([sx, sy]) => Math.abs(sx - x) < 5 && Math.abs(sy - y) < 5
-        );
-      });
-      setSelectedStroke(clickedStroke || null);
-      if (clickedStroke) setMovingStroke(true);
-    } else {
-      const layerCtx = layers[currentLayer.index].ctx;
-      const mainCtx = canvasRef.current!.getContext("2d")!;
-      const layerImageData = layerCtx.getImageData(
-        0,
-        0,
-        layerCtx.canvas.width,
-        layerCtx.canvas.height
-      );
-
-      setUndoStack((prev) => [
-        ...prev,
-        { type: tool, layerIndex: currentLayer.index, data: layerImageData },
-      ]);
-      setRedoStack([]);
-
-      if (tool === "draw") {
-        setStrokes((prev) => [
-          ...prev,
-          {
-            path: [[x, y]],
-            color,
-            width: lineWidth,
-            layerIndex: currentLayer.index,
-          },
-        ]);
-      } else if (tool === "bucket") {
-        bucketFill(layerCtx, x, y);
-        bucketFill(mainCtx, x, y);
-      }
-    }
-  };
-
-  const handleMouseMove = (e: React.MouseEvent<HTMLCanvasElement>) => {
-    if (!isDrawing) return;
-
-    const rect = canvasRef.current!.getBoundingClientRect();
-    const x = Math.floor(e.clientX - rect.left);
-    const y = Math.floor(e.clientY - rect.top);
-
-    if (tool === "draw") {
-      draw(layers[currentLayer.index].ctx, x, y);
-      draw(canvasRef.current!.getContext("2d")!, x, y);
-      setStrokes((prev) => {
-        const newStrokes = [...prev];
-        newStrokes[newStrokes.length - 1].path.push([x, y]);
-        return newStrokes;
-      });
-    } else if (tool === "erase") {
-      erase(layers[currentLayer.index].ctx, x, y);
-      erase(canvasRef.current!.getContext("2d")!, x, y);
-    } else if (tool === "select" && selectedStroke && movingStroke) {
-      const dx = x - lastPosition.current![0];
-      const dy = y - lastPosition.current![1];
-      setStrokes((prev) =>
-        prev.map((stroke) =>
-          stroke === selectedStroke
-            ? {
-                ...stroke,
-                path: stroke.path.map(([px, py]) => [px + dx, py + dy]),
-              }
-            : stroke
-        )
-      );
-      lastPosition.current = [x, y];
-    }
-  };
-
-  const handleMouseUp = () => {
-    setIsDrawing(false);
-    lastPosition.current = null;
-    setMovingStroke(false);
-  };
-
-  const handleUndo = () => {
-    if (undoStack.length === 0) return;
-
-    const lastAction = undoStack[undoStack.length - 1];
-    const { layerIndex, data } = lastAction;
-
-    const currentData = layers[layerIndex].ctx.getImageData(
-      0,
-      0,
-      layers[layerIndex].canvas.width,
-      layers[layerIndex].canvas.height
-    );
-    setRedoStack((prev) => [...prev, { ...lastAction, data: currentData }]);
-
-    layers[layerIndex].ctx.putImageData(data, 0, 0);
-    setUndoStack((prev) => prev.slice(0, -1));
-
-    if (canvasRef.current) {
-      const mainCtx = canvasRef.current.getContext("2d")!;
-      mainCtx.clearRect(
-        0,
-        0,
-        canvasRef.current.width,
-        canvasRef.current.height
-      );
-      layers.forEach((layer) => {
-        mainCtx.drawImage(layer.canvas, 0, 0);
-      });
-    }
-  };
-
-  const handleRedo = () => {
-    if (redoStack.length === 0) return;
-
-    const lastAction = redoStack[redoStack.length - 1];
-    const { layerIndex, data } = lastAction;
-
-    const currentData = layers[layerIndex].ctx.getImageData(
-      0,
-      0,
-      layers[layerIndex].canvas.width,
-      layers[layerIndex].canvas.height
-    );
-    setUndoStack((prev) => [...prev, { ...lastAction, data: currentData }]);
-
-    layers[layerIndex].ctx.putImageData(data, 0, 0);
-    setRedoStack((prev) => prev.slice(0, -1));
-
-    if (canvasRef.current) {
-      const mainCtx = canvasRef.current.getContext("2d")!;
-      mainCtx.clearRect(
-        0,
-        0,
-        canvasRef.current.width,
-        canvasRef.current.height
-      );
-      layers.forEach((layer) => {
-        mainCtx.drawImage(layer.canvas, 0, 0);
-      });
-    }
-  };
-
-  useEffect(() => {
-    if (!canvasRef.current) return;
-
-    const mainCtx = canvasRef.current.getContext("2d")!;
-    mainCtx.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
-
-    layers.forEach((layer, i) => {
-      layer.ctx.clearRect(0, 0, layer.canvas.width, layer.canvas.height);
-    });
-
-    strokes.forEach((stroke) => {
-      const ctx = layers[stroke.layerIndex].ctx;
-      ctx.beginPath();
-      ctx.moveTo(stroke.path[0][0], stroke.path[0][1]);
-      stroke.path.forEach(([x, y]) => ctx.lineTo(x, y));
-      ctx.strokeStyle = stroke.color;
-      ctx.lineWidth = stroke.width;
-      ctx.lineCap = "round";
-      ctx.stroke();
-
-      mainCtx.beginPath();
-      mainCtx.moveTo(stroke.path[0][0], stroke.path[0][1]);
-      stroke.path.forEach(([x, y]) => mainCtx.lineTo(x, y));
-      mainCtx.strokeStyle = stroke.color;
-      mainCtx.lineWidth = stroke.width;
-      mainCtx.lineCap = "round";
-      mainCtx.stroke();
-    });
-  }, [layers, strokes]);
 
   const getPixel = (imageData: ImageData, x: number, y: number) => {
     const index = (y * imageData.width + x) * 4;
@@ -327,8 +170,188 @@ const Canvas = () => {
     return [r, g, b, 255];
   };
 
+  const handleMouseDown = (e: React.MouseEvent<HTMLCanvasElement>) => {
+    const rect = canvasRef.current!.getBoundingClientRect();
+    const x = Math.floor(e.clientX - rect.left);
+    const y = Math.floor(e.clientY - rect.top);
+
+    setIsDrawing(true);
+    lastPosition.current = [x, y];
+
+    const layerCtx = layers[currentLayer].ctx;
+    const layerImageData = layerCtx.getImageData(
+      0,
+      0,
+      layerCtx.canvas.width,
+      layerCtx.canvas.height
+    );
+
+    if (tool === "draw" || tool === "erase") {
+      const newStroke: Stroke = {
+        path: [[x, y]],
+        color: tool === "erase" ? "rgba(0,0,0,1)" : color,
+        width: lineWidth,
+        layerIndex: currentLayer,
+        type: tool,
+      };
+      const newAction: Action = {
+        type: tool,
+        layerIndex: currentLayer,
+        data: layerImageData,
+        stroke: newStroke,
+      };
+      setActions((prev) => [...prev, newAction]);
+      setUndoStack((prev) => [...prev, newAction]);
+      setRedoStack([]);
+    } else if (tool === "bucket") {
+      bucketFill(layerCtx, x, y, color);
+      const newAction: Action = {
+        type: "bucket",
+        layerIndex: currentLayer,
+        data: layerImageData,
+        bucketFillData: { x, y, color },
+      };
+      setActions((prev) => [...prev, newAction]);
+      setUndoStack((prev) => [...prev, newAction]);
+      setRedoStack([]);
+    }
+
+    updateMainCanvas();
+  };
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLCanvasElement>) => {
+    if (!isDrawing) return;
+
+    const rect = canvasRef.current!.getBoundingClientRect();
+    const x = Math.floor(e.clientX - rect.left);
+    const y = Math.floor(e.clientY - rect.top);
+
+    if (tool === "draw" || tool === "erase") {
+      draw(layers[currentLayer].ctx, x, y, tool === "erase");
+      setActions((prev) => {
+        const newActions = [...prev];
+        const currentAction = newActions[newActions.length - 1];
+        if (
+          currentAction &&
+          currentAction.stroke &&
+          currentAction.layerIndex === currentLayer
+        ) {
+          currentAction.stroke.path.push([x, y]);
+        }
+        return newActions;
+      });
+    }
+
+    updateMainCanvas();
+  };
+
+  const handleMouseUp = () => {
+    setIsDrawing(false);
+    lastPosition.current = null;
+    updateMainCanvas();
+  };
+
+  const handleUndo = () => {
+    if (undoStack.length === 0) return;
+
+    const lastAction = undoStack[undoStack.length - 1];
+    const { layerIndex, data } = lastAction;
+
+    const currentData = layers[layerIndex].ctx.getImageData(
+      0,
+      0,
+      layers[layerIndex].canvas.width,
+      layers[layerIndex].canvas.height
+    );
+    setRedoStack((prev) => [...prev, { ...lastAction, data: currentData }]);
+
+    layers[layerIndex].ctx.putImageData(data, 0, 0);
+    setUndoStack((prev) => prev.slice(0, -1));
+    setActions((prev) => prev.slice(0, -1));
+
+    updateMainCanvas();
+  };
+
+  const handleRedo = () => {
+    if (redoStack.length === 0) return;
+
+    const lastAction = redoStack[redoStack.length - 1];
+    const { layerIndex, type, bucketFillData } = lastAction;
+
+    const currentData = layers[layerIndex].ctx.getImageData(
+      0,
+      0,
+      layers[layerIndex].canvas.width,
+      layers[layerIndex].canvas.height
+    );
+    setUndoStack((prev) => [...prev, { ...lastAction, data: currentData }]);
+
+    if (type === "bucket" && bucketFillData) {
+      bucketFill(
+        layers[layerIndex].ctx,
+        bucketFillData.x,
+        bucketFillData.y,
+        bucketFillData.color
+      );
+    } else {
+      layers[layerIndex].ctx.putImageData(lastAction.data, 0, 0);
+    }
+
+    setRedoStack((prev) => prev.slice(0, -1));
+    setActions((prev) => [...prev, lastAction]);
+
+    updateMainCanvas();
+  };
+
+  const updateMainCanvas = useCallback(() => {
+    if (canvasRef.current) {
+      const mainCtx = canvasRef.current.getContext("2d")!;
+      mainCtx.clearRect(
+        0,
+        0,
+        canvasRef.current.width,
+        canvasRef.current.height
+      );
+      layers.forEach((layer) => {
+        mainCtx.drawImage(layer.canvas, 0, 0);
+      });
+    }
+  }, [layers]);
+
+  useEffect(() => {
+    layers.forEach((layer) => {
+      layer.ctx.clearRect(0, 0, layer.canvas.width, layer.canvas.height);
+    });
+
+    actions.forEach((action) => {
+      const ctx = layers[action.layerIndex].ctx;
+      if (action.type === "draw" || action.type === "erase") {
+        const stroke = action.stroke!;
+        ctx.beginPath();
+        ctx.moveTo(stroke.path[0][0], stroke.path[0][1]);
+        stroke.path.forEach(([x, y]) => ctx.lineTo(x, y));
+        ctx.strokeStyle = stroke.color;
+        ctx.lineWidth = stroke.width;
+        ctx.lineCap = "round";
+        ctx.globalCompositeOperation =
+          action.type === "erase" ? "destination-out" : "source-over";
+        ctx.stroke();
+        ctx.globalCompositeOperation = "source-over";
+      } else if (action.type === "bucket" && action.bucketFillData) {
+        bucketFill(
+          ctx,
+          action.bucketFillData.x,
+          action.bucketFillData.y,
+          action.bucketFillData.color
+        );
+      }
+    });
+
+    updateMainCanvas();
+  }, [layers, actions, bucketFill, updateMainCanvas]);
+
   const onSetLayer = (selection: any) => {
-    setCurrentLayer(selection);
+    setCurrentLayer(selection.index);
   };
 
   return (
@@ -336,7 +359,7 @@ const Canvas = () => {
       <div className="canvas w-[92%] h-[92%] rounded-[20px] bg-[#1E1D22] flex flex-col gap-y-[0.4em]">
         <div className="items-center gap-x-[1em] canvas-header bg-[var(--canvas-menu-bg)] flex px-[0.9em] rounded-t-[20px] py-[0.5em] w-[100%]">
           <Dropdown
-            value={currentLayer}
+            value={LAYERS[currentLayer]}
             options={LAYERS}
             onChange={onSetLayer}
           />
@@ -370,7 +393,10 @@ const Canvas = () => {
             width="7em"
           />
         </div>
-        <div className="bg-[var(--canvas-bg)] h-[100%] w-[100%] rounded-[10px] flex items-center justify-center relative overflow-hidden">
+        <div
+          ref={parentRef}
+          className="bg-[var(--canvas-bg)] bg-red-300 h-[100%] w-[100%] rounded-[10px] flex items-center justify-center relative overflow-hidden"
+        >
           <canvas
             ref={canvasRef}
             width="100%"

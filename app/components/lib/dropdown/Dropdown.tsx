@@ -8,7 +8,7 @@ const Dropdown = ({
 }: {
   value: any;
   options: any[];
-  onChange: (selection: String) => void;
+  onChange: (selection: any) => void;
 }) => {
   const [open, setOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);

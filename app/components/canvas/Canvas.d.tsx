@@ -1,19 +1,23 @@
-export type Tool = "draw" | "erase" | "select" | "bucket";
-
-export type Layer = {
+type Tool = "draw" | "erase" | "bucket";
+type Layer = {
   canvas: HTMLCanvasElement;
   ctx: CanvasRenderingContext2D;
 };
-
-export type Stroke = {
+type Stroke = {
   path: [number, number][];
   color: string;
   width: number;
   layerIndex: number;
+  type: "draw" | "erase";
 };
-
-export type Action = {
+type Action = {
   type: "draw" | "erase" | "bucket";
   layerIndex: number;
   data: ImageData;
+  stroke?: Stroke;
+  bucketFillData?: {
+    x: number;
+    y: number;
+    color: string;
+  };
 };
