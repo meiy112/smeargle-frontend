@@ -10,6 +10,12 @@ const LAYERS = [
   { title: "Box", index: 0 },
   { title: "Text", index: 1 },
   { title: "Button", index: 2 },
+  { title: "Dropdown", index: 3 },
+  { title: "SVG", index: 4 },
+  { title: "Text Input", index: 5 },
+  { title: "Paragraph Input", index: 6 },
+  { title: "Number Input", index: 7 },
+  { title: "Slider", index: 8 },
 ];
 
 const Canvas = () => {
@@ -18,7 +24,7 @@ const Canvas = () => {
   const [currentLayer, setCurrentLayer] = useState(0);
   const [tool, setTool] = useState<Tool>("draw");
   const [isDrawing, setIsDrawing] = useState(false);
-  const [color, setColor] = useState("#000000");
+  const [color, setColor] = useState("#ffffff");
   const [lineWidth, setLineWidth] = useState(5);
   const [actions, setActions] = useState<Action[]>([]);
   const lastPosition = useRef<[number, number] | null>(null);
@@ -32,7 +38,7 @@ const Canvas = () => {
       if (parent) {
         canvasRef.current.width = parent.offsetWidth;
         canvasRef.current.height = parent.offsetHeight;
-        const initLayers = Array.from({ length: 5 }, () => {
+        const initLayers = Array.from({ length: LAYERS.length }, () => {
           const canvas = document.createElement("canvas");
           canvas.width = canvasRef.current!.width;
           canvas.height = canvasRef.current!.height;
@@ -100,7 +106,7 @@ const Canvas = () => {
         const [x, y] = pixelsToCheck.pop()!;
         const currentColor = getPixel(imageData, x, y);
 
-        if (colorsMatch(currentColor, targetColor)) {
+        if (colorsMatch(Array.from(currentColor) as number[], targetColor)) {
           setPixel(imageData, x, y, fillColorRgb);
           filledPixels.push([x, y]);
 
@@ -134,7 +140,7 @@ const Canvas = () => {
 
   const colorsMatch = (
     color1: Uint8ClampedArray | number[],
-    color2: number[]
+    color2: Uint8ClampedArray | number[]
   ) => {
     return (
       color1[0] === color2[0] &&
@@ -337,7 +343,7 @@ const Canvas = () => {
 
   return (
     <div className="select-none flex-1 h-[100%] flex items-center justify-center">
-      <div className="canvas w-[92%] h-[92%] rounded-[20px] bg-[#1E1D22] flex flex-col gap-y-[0.4em]">
+      <div className="canvas w-[92%] h-[92%] rounded-[20px] bg-[#1E1D22] flex flex-col overflow-hidden">
         <div className="items-center gap-x-[1em] canvas-header bg-[var(--canvas-menu-bg)] flex px-[0.9em] rounded-t-[20px] py-[0.5em] w-[100%]">
           <Dropdown
             value={LAYERS[currentLayer]}
@@ -374,19 +380,18 @@ const Canvas = () => {
             width="7em"
           />
         </div>
-        <div className="bg-[var(--canvas-bg)] h-[100%] w-[100%] rounded-[10px] flex items-center justify-center relative overflow-hidden">
+        <div className="bg-[var(--canvas-bg)] h-[100%] w-[100%] flex items-center justify-center relative overflow-hidden">
           <canvas
             ref={canvasRef}
             width="100%"
             height="100%"
-            className="border border-gray-300"
             onMouseDown={handleMouseDown}
             onMouseMove={handleMouseMove}
             onMouseUp={handleMouseUp}
             onMouseOut={handleMouseUp}
           />
           {loading && (
-            <div className="absolute text-black bg-white h-[100%] w-[100%] flex items-center justify-center">
+            <div className="absolute text-white bg-[var(--canvas-bg)] h-[100%] w-[100%] flex items-center justify-center">
               Loading...
             </div>
           )}

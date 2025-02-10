@@ -6,7 +6,7 @@ const EditorPreview = () => {
   const [page] = useState("editor");
 
   return (
-    <div className="w-[49%] h-[100%] bg-red-300">
+    <div className="w-[49%] h-[100%]">
       <div></div>
     </div>
   );

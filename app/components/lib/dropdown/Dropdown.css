@@ -1,5 +1,5 @@
 .dropdown-container > div {
-  border: 1px solid var(--border__light);
+  border: 1px solid var(--border__medium);
   border-radius: var(--border-radius__s);
 }
 

@@ -6,10 +6,11 @@
   --background: #000000;
   --foreground: #ffffff;
   --border: #28272c;
-  --border__light: #36353a;
+  --border__medium: #36353a;
+  --border__light: #5d5d5d;
   --border-radius: 9px;
   --border-radius__s: 7px;
-  --canvas-bg: #fff;
+  --canvas-bg: #000;
   --canvas-menu-bg: #222d33;
   --hover-bg: rgba(255, 255, 255, 0.15);
   --purple: #855fff;
