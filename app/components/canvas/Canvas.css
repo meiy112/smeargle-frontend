@@ -21,3 +21,14 @@ input::-webkit-color-swatch-wrapper {
 input::-webkit-color-swatch {
   border: none;
 }
+
+.canvas-border {
+  border: 1px solid #3e3e3e;
+}
+
+.canvas-border__bottom {
+  border-bottom: 1px solid #3e3e3e;
+  border-left: none;
+  border-right: none;
+  border-top: none;
+}

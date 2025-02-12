@@ -8,6 +8,7 @@ const Button = ({
   background,
   selected,
   changeOpacity,
+  disabled,
 }: {
   icon: string;
   onClick: () => void;
@@ -15,11 +16,14 @@ const Button = ({
   background?: string;
   selected?: boolean;
   changeOpacity?: boolean;
+  disabled?: boolean;
 }) => {
   return (
     <button
       onClick={onClick}
-      className={`button ${outlined && "button--outlined"}`}
+      className={`button ${outlined && "button--outlined"} ${
+        disabled && "disabled"
+      }`}
       style={{
         backgroundColor: selected ? background : undefined,
         border: selected

@@ -3,17 +3,18 @@
 @tailwind utilities;
 
 :root {
-  --background: #000000;
+  --background: #030712;
   --foreground: #ffffff;
   --border: #28272c;
   --border__medium: #36353a;
-  --border__light: #5d5d5d;
+  --border__light: #484848;
   --border-radius: 9px;
   --border-radius__s: 7px;
-  --canvas-bg: #000;
+  --canvas-bg: #0f0f10;
   --canvas-menu-bg: #222d33;
   --hover-bg: rgba(255, 255, 255, 0.15);
   --purple: #855fff;
+  --editor-bg: #0f0f10;
 }
 
 @media (prefers-color-scheme: dark) {

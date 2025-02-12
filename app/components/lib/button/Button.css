@@ -16,3 +16,8 @@
   background: var(--hover-bg);
   border: 1px solid var(--hover-bg);
 }
+
+.disabled {
+  pointer-events: none;
+  opacity: 50% !important;
+}

@@ -343,58 +343,76 @@ const Canvas = () => {
 
   return (
     <div className="select-none flex-1 h-[100%] flex items-center justify-center">
-      <div className="canvas w-[92%] h-[92%] rounded-[20px] bg-[#1E1D22] flex flex-col overflow-hidden">
-        <div className="items-center gap-x-[1em] canvas-header bg-[var(--canvas-menu-bg)] flex px-[0.9em] rounded-t-[20px] py-[0.5em] w-[100%]">
-          <Dropdown
-            value={LAYERS[currentLayer]}
-            options={LAYERS}
-            onChange={onSetLayer}
-          />
-          <Button
-            icon="./pen.svg"
-            onClick={() => setTool("draw")}
-            selected={tool === "draw"}
-            background={"var(--purple)"}
-            changeOpacity={true}
-          />
-          <Button
-            icon="./erasor.svg"
-            onClick={() => setTool("erase")}
-            selected={tool === "erase"}
-            background={"var(--purple)"}
-            changeOpacity={true}
-          />
-          <Button
-            icon="./bucket.svg"
-            onClick={() => setTool("bucket")}
-            selected={tool === "bucket"}
-            background={"var(--purple)"}
-            changeOpacity={true}
-          />
-          <ColorPicker color={color} setColor={setColor} />
-          <Slider
-            value={lineWidth}
-            max={10}
-            min={1}
-            handleChange={(value: number) => setLineWidth(value)}
-            width="7em"
-          />
-        </div>
-        <div className="bg-[var(--canvas-bg)] h-[100%] w-[100%] flex items-center justify-center relative overflow-hidden">
-          <canvas
-            ref={canvasRef}
-            width="100%"
-            height="100%"
-            onMouseDown={handleMouseDown}
-            onMouseMove={handleMouseMove}
-            onMouseUp={handleMouseUp}
-            onMouseOut={handleMouseUp}
-          />
-          {loading && (
-            <div className="absolute text-white bg-[var(--canvas-bg)] h-[100%] w-[100%] flex items-center justify-center">
-              Loading...
+      <div className="box-border canvas w-[92%] h-[92%] rounded-[16px] bg-[var(--canvas-menu-bg)] flex flex-col overflow-hidden">
+        <div className="canvas-border__bottom bg-[var(--canvas-bg)] w-[100%] rounded-[16px] p-[3px] shrink-0">
+          <div className="justify-between canvas-border rounded-[12px] items-center bg-[var(--canvas-menu-bg)] flex px-[0.9em] py-[0.5em] w-[100%]">
+            <div className="gap-x-[1em] flex">
+              <Dropdown
+                value={LAYERS[currentLayer]}
+                options={LAYERS}
+                onChange={onSetLayer}
+              />
+              <Button
+                icon="./pen.svg"
+                onClick={() => setTool("draw")}
+                selected={tool === "draw"}
+                background={"var(--purple)"}
+                changeOpacity={true}
+              />
+              <Button
+                icon="./erasor.svg"
+                onClick={() => setTool("erase")}
+                selected={tool === "erase"}
+                background={"var(--purple)"}
+                changeOpacity={true}
+              />
+              <Button
+                icon="./bucket.svg"
+                onClick={() => setTool("bucket")}
+                selected={tool === "bucket"}
+                background={"var(--purple)"}
+                changeOpacity={true}
+              />
+              <ColorPicker color={color} setColor={setColor} />
+              <Slider
+                value={lineWidth}
+                max={10}
+                min={1}
+                handleChange={(value: number) => setLineWidth(value)}
+                width="7em"
+              />
             </div>
-          )}
+            <div className="gap-x-[1em] flex">
+              <Button
+                icon="./undo.svg"
+                onClick={handleUndo}
+                disabled={undoStack.length === 0}
+              />
+              <Button
+                icon="./redo.svg"
+                onClick={handleRedo}
+                disabled={redoStack.length === 0}
+              />
+            </div>
+          </div>
+        </div>
+        <div className="flex-grow flex w-[100%] p-[3px] shrink-0">
+          <div className="canvas-border rounded-[12px] bg-[var(--canvas-bg)] h-[100%] w-[100%] flex items-center justify-center relative overflow-hidden">
+            <canvas
+              ref={canvasRef}
+              width="100%"
+              height="100%"
+              onMouseDown={handleMouseDown}
+              onMouseMove={handleMouseMove}
+              onMouseUp={handleMouseUp}
+              onMouseOut={handleMouseUp}
+            />
+            {loading && (
+              <div className="absolute text-white bg-[var(--canvas-bg)] h-[100%] w-[100%] flex items-center justify-center">
+                Loading...
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </div>
