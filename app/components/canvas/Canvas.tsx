@@ -353,21 +353,33 @@ const Canvas = () => {
                 onChange={onSetLayer}
               />
               <Button
-                icon="./pen.svg"
+                child={
+                  <div className="icon">
+                    <img src="./pen.svg" alt="pen" />
+                  </div>
+                }
                 onClick={() => setTool("draw")}
                 selected={tool === "draw"}
                 background={"var(--purple)"}
                 changeOpacity={true}
               />
               <Button
-                icon="./erasor.svg"
+                child={
+                  <div className="icon">
+                    <img src="./erasor.svg" alt="erasor" />
+                  </div>
+                }
                 onClick={() => setTool("erase")}
                 selected={tool === "erase"}
                 background={"var(--purple)"}
                 changeOpacity={true}
               />
               <Button
-                icon="./bucket.svg"
+                child={
+                  <div className="icon">
+                    <img src="./bucket.svg" alt="bucket" />
+                  </div>
+                }
                 onClick={() => setTool("bucket")}
                 selected={tool === "bucket"}
                 background={"var(--purple)"}
@@ -384,12 +396,20 @@ const Canvas = () => {
             </div>
             <div className="gap-x-[1em] flex">
               <Button
-                icon="./undo.svg"
+                child={
+                  <div className="icon">
+                    <img src="./undo.svg" alt="undo" />
+                  </div>
+                }
                 onClick={handleUndo}
                 disabled={undoStack.length === 0}
               />
               <Button
-                icon="./redo.svg"
+                child={
+                  <div className="icon">
+                    <img src="./redo.svg" alt="redo" />
+                  </div>
+                }
                 onClick={handleRedo}
                 disabled={redoStack.length === 0}
               />

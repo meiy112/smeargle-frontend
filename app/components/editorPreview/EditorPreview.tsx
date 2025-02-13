@@ -5,7 +5,7 @@ import "./EditorPreview.css";
 import Topbar from "./Topbar";
 
 const EditorPreview = () => {
-  const [page, setPage] = useState("editor");
+  const [page, setPage] = useState("Preview");
 
   return (
     <div className="w-[49%] h-[100%] editor-preview">

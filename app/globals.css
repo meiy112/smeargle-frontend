@@ -12,7 +12,8 @@
   --border-radius__s: 7px;
   --canvas-bg: #0f0f10;
   --canvas-menu-bg: #222d33;
-  --hover-bg: rgba(255, 255, 255, 0.15);
+  --hover-bg: rgba(255, 255, 255, 0.1);
+  --hover-bg__solid: #272728;
   --purple: #855fff;
   --editor-bg: #0f0f10;
 }
@@ -36,4 +37,12 @@ body {
   padding: 0;
   box-sizing: border-box;
   height: 100%;
+}
+
+.icon {
+  width: 2em;
+  height: 2em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }

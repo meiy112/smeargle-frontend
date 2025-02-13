@@ -1,8 +1,9 @@
 "use client";
+import { ReactNode } from "react";
 import "./Button.css";
 
 const Button = ({
-  icon,
+  child,
   onClick,
   outlined,
   background,
@@ -10,7 +11,7 @@ const Button = ({
   changeOpacity,
   disabled,
 }: {
-  icon: string;
+  child: ReactNode;
   onClick: () => void;
   outlined?: boolean;
   background?: string;
@@ -29,10 +30,11 @@ const Button = ({
         border: selected
           ? `1px solid ${background}`
           : `1px solid rgba(0, 0, 0, 0)`,
-        opacity: changeOpacity && !selected ? 0.5 : 1,
       }}
     >
-      <img src={icon} alt={icon} />
+      <div style={{ opacity: changeOpacity && !selected ? 0.5 : 1 }}>
+        {child}
+      </div>
     </button>
   );
 };

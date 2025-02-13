@@ -20,9 +20,31 @@ const Sidebar = () => {
     <div className="select-none relative h-[100%] side-bar">
       <img src="./logo.svg" alt="Logo" />
       <div className="side-bar__buttons">
-        <Button icon="./plus.svg" onClick={onAddButtonClick} outlined={true} />
-        <Button icon="./book.svg" onClick={onLibraryButtonClick} />
-        <Button icon="./info.svg" onClick={onInfoButtonClick} />
+        <Button
+          child={
+            <div className="icon">
+              <img src="./plus.svg" alt="plus" />
+            </div>
+          }
+          onClick={onAddButtonClick}
+          outlined={true}
+        />
+        <Button
+          child={
+            <div className="icon">
+              <img src="./book.svg" alt="book" />
+            </div>
+          }
+          onClick={onLibraryButtonClick}
+        />
+        <Button
+          child={
+            <div className="icon">
+              <img src="./info.svg" alt="unfo" />
+            </div>
+          }
+          onClick={onInfoButtonClick}
+        />
       </div>
     </div>
   );

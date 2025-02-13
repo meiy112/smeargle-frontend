@@ -1,4 +1,7 @@
 .editor-preview {
-  border-left: 1px solid var(--border);
+  /* border-left: 1px solid var(--border); */
+}
+
+.editor {
   background: var(--editor-bg);
 }
