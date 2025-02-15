@@ -416,7 +416,7 @@ const Canvas = () => {
             </div>
           </div>
         </div>
-        <div className="flex-grow flex w-[100%] p-[3px] shrink-0">
+        <div className="flex-grow flex w-[100%] p-[3px] pb-[4.5px] shrink-0">
           <div className="canvas-border rounded-[12px] bg-[var(--canvas-bg)] h-[100%] w-[100%] flex items-center justify-center relative overflow-hidden">
             <canvas
               ref={canvasRef}
