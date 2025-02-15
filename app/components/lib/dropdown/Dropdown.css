@@ -1,0 +1,14 @@
+.dropdown-container > div {
+  border: 1px solid var(--border__medium);
+  border-radius: var(--border-radius__s);
+}
+
+.dropdown-option {
+  cursor: pointer;
+  padding: 0.3em 0.7em;
+  border-radius: calc(var(--border-radius__s) / 2);
+}
+
+.dropdown-option:hover {
+  background: var(--hover-bg);
+}

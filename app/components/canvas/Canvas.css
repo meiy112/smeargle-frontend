@@ -1,0 +1,34 @@
+.canvas {
+  border: 1px solid var(--border__light);
+  font-size: 0.85rem;
+}
+
+.color-picker {
+  border: 1px solid white;
+  border-radius: var(--border-radius__s);
+}
+
+input {
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+input::-webkit-color-swatch-wrapper {
+  padding: 0;
+  margin: 0;
+  background: none;
+}
+input::-webkit-color-swatch {
+  border: none;
+}
+
+.canvas-border {
+  border: 1px solid #3e3e3e;
+}
+
+.canvas-border__bottom {
+  border-bottom: 1px solid #3e3e3e;
+  border-left: none;
+  border-right: none;
+  border-top: none;
+}

@@ -1,0 +1,21 @@
+.button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--border-radius__s);
+  border: 1px solid rgba(0, 0, 0, 0);
+}
+
+.button--outlined {
+  border: 1px solid var(--border) !important;
+}
+
+.button:hover {
+  background: var(--hover-bg);
+  border: 1px solid var(--hover-bg);
+}
+
+.disabled {
+  pointer-events: none;
+  opacity: 50% !important;
+}
