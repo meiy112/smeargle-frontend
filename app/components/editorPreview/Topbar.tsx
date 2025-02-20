@@ -44,9 +44,9 @@ const Topbar = ({
           }
           onClick={onCopyClick}
         />
-        <button className="text-black flex items-center justify-center gap-[0.4em] px-[0.7em] py-[0.3em] bg-white rounded-[6px]">
+        <button className="text-black flex items-center justify-center gap-[0.5em] pl-[0.7em] pr-[0.9em] py-[0.3em] bg-white rounded-[6px]">
           <img src="./download.svg" alt="download icon" />
-          <span>Download</span>
+          <span>Export</span>
         </button>
       </div>
     </div>

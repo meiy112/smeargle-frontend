@@ -7,7 +7,10 @@ export async function getPing() {
     const data = await res.json();
     return data.message;
   } catch (err) {
-    console.error("Error fetching ping:", err);
-    return err;
+    if (err instanceof Error) {
+      return err.message;
+    } else {
+      return String(err);
+    }
   }
 }
