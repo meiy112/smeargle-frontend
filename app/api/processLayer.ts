@@ -1,12 +1,9 @@
+import { ProcessedLayer } from "../class/ProcessedLayer";
+
 type ProcessResponse = {
   status: string;
   results: string[];
 };
-
-export interface ProcessedLayer {
-  title: string;
-  data: any[];
-}
 
 async function processLayers(
   layers: Layer[]

@@ -6,17 +6,7 @@ import ColorPicker from "./ColorPicker";
 import Button from "../lib/button/Button";
 import Slider from "../lib/slider/Slider";
 import { useLayers } from "@/app/context/LayersProvider";
-
-export const LAYERS = [
-  { title: "Box", index: 0 },
-  { title: "Text", index: 1 },
-  { title: "Button", index: 2 },
-  { title: "Dropdown", index: 3 },
-  { title: "SVG", index: 4 },
-  { title: "Text Input", index: 5 },
-  { title: "Number Input", index: 6 },
-  { title: "Slider", index: 7 },
-];
+import { LAYERS } from "./utils";
 
 const Canvas = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);

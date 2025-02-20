@@ -7,13 +7,9 @@ import React, {
   useRef,
   useState,
 } from "react";
+import { LAYERS } from "../components/canvas/utils";
+import { ProcessedLayer } from "../class/ProcessedLayer";
 import processLayers from "../api/processLayer";
-import { LAYERS } from "../components/canvas/Canvas";
-
-export interface ProcessedLayer {
-  title: string;
-  data: any[];
-}
 
 interface LayersContextType {
   layers: Layer[];
