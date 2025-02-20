@@ -5,22 +5,11 @@ import "./Canvas.css";
 import ColorPicker from "./ColorPicker";
 import Button from "../lib/button/Button";
 import Slider from "../lib/slider/Slider";
-
-const LAYERS = [
-  { title: "Box", index: 0 },
-  { title: "Text", index: 1 },
-  { title: "Button", index: 2 },
-  { title: "Dropdown", index: 3 },
-  { title: "SVG", index: 4 },
-  { title: "Text Input", index: 5 },
-  { title: "Paragraph Input", index: 6 },
-  { title: "Number Input", index: 7 },
-  { title: "Slider", index: 8 },
-];
+import { useLayers } from "@/app/context/LayersProvider";
+import { LAYERS } from "./utils";
 
 const Canvas = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const [layers, setLayers] = useState<Layer[]>([]);
   const [currentLayer, setCurrentLayer] = useState(0);
   const [tool, setTool] = useState<Tool>("draw");
   const [isDrawing, setIsDrawing] = useState(false);
@@ -32,18 +21,21 @@ const Canvas = () => {
   const [redoStack, setRedoStack] = useState<Action[]>([]);
   const [loading, setLoading] = useState(true);
 
+  const { layers, setLayers } = useLayers();
+
   useEffect(() => {
     if (canvasRef.current) {
       const parent = canvasRef.current.parentElement;
       if (parent) {
         canvasRef.current.width = parent.offsetWidth;
         canvasRef.current.height = parent.offsetHeight;
-        const initLayers = Array.from({ length: LAYERS.length }, () => {
+
+        const initLayers = LAYERS.map((layer) => {
           const canvas = document.createElement("canvas");
           canvas.width = canvasRef.current!.width;
           canvas.height = canvasRef.current!.height;
           const ctx = canvas.getContext("2d")!;
-          return { canvas, ctx };
+          return { canvas, ctx, title: layer.title };
         });
 
         setLoading(false);

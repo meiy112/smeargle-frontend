@@ -1,8 +1,11 @@
 type Tool = "draw" | "erase" | "bucket";
+
 type Layer = {
   canvas: HTMLCanvasElement;
   ctx: CanvasRenderingContext2D;
+  title: string;
 };
+
 type Stroke = {
   path: [number, number][];
   color: string;
