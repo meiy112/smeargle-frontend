@@ -1,13 +1,11 @@
-import { ProcessedLayer } from "../class/ProcessedLayer";
+import { ComponentData } from "../class/ComponentData";
 
 type ProcessResponse = {
   status: string;
   results: string[];
 };
 
-async function processLayers(
-  layers: Layer[]
-): Promise<ProcessedLayer[] | null> {
+async function processLayers(layers: Layer[]): Promise<ComponentData[] | null> {
   const processData = layers.map((layer) => ({
     title: layer.title,
     canvas: layer.canvas.toDataURL("image/png").split(",")[1],
@@ -35,7 +33,7 @@ async function processLayers(
       throw new Error(`Failed to parse JSON. Full response: ${responseText}`);
     }
 
-    const processed: ProcessedLayer[] = data.results.map((result: string) => {
+    const processed: ComponentData[] = data.results.map((result: string) => {
       try {
         return JSON.parse(result);
       } catch (parseError) {
