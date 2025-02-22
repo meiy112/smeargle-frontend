@@ -7,14 +7,13 @@ import React, {
   useRef,
   useState,
 } from "react";
-import { LAYERS } from "../components/canvas/utils";
-import { ProcessedLayer } from "../class/ProcessedLayer";
 import processLayers from "../api/processLayer";
+import { ComponentData } from "../class/ComponentData";
 
 interface LayersContextType {
   layers: Layer[];
   setLayers: React.Dispatch<React.SetStateAction<Layer[]>>;
-  processedLayers: ProcessedLayer[];
+  processedLayers: ComponentData[];
 }
 
 const LayersContext = createContext<LayersContextType | undefined>(undefined);
@@ -23,7 +22,7 @@ export const LayersProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
   const [layers, setLayers] = useState<Layer[]>([]);
-  const [processedLayers, setProcessedLayers] = useState<ProcessedLayer[]>([]);
+  const [processedLayers, setProcessedLayers] = useState<ComponentData[]>([]);
   const prevLayersRef = useRef<Layer[]>([]);
 
   useEffect(() => {
@@ -39,14 +38,7 @@ export const LayersProvider: React.FC<{ children: React.ReactNode }> = ({
     if (changedLayers.length > 0) {
       processLayers(changedLayers).then((result) => {
         if (result) {
-          setProcessedLayers((prev) =>
-            LAYERS.map((layerConst) => {
-              const updated = result.find((r) => r.title === layerConst.title);
-              if (updated) return updated;
-              const existing = prev.find((p) => p.title === layerConst.title);
-              return existing || { title: layerConst.title, data: [] };
-            })
-          );
+          setProcessedLayers(result);
         }
       });
     }
