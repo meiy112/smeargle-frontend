@@ -1,10 +1,5 @@
 import { ComponentData } from "../class/ComponentData";
 
-type ProcessResponse = {
-  status: string;
-  results: string[];
-};
-
 async function processLayers(layers: Layer[]): Promise<ComponentData[] | null> {
   const processData = layers.map((layer) => ({
     title: layer.title,
@@ -26,21 +21,16 @@ async function processLayers(layers: Layer[]): Promise<ComponentData[] | null> {
     }
 
     const responseText = await response.text();
-    let data: ProcessResponse;
+    console.log(responseText);
+    let data;
     try {
       data = JSON.parse(responseText);
     } catch (jsonParseError) {
       throw new Error(`Failed to parse JSON. Full response: ${responseText}`);
     }
 
-    const processed: ComponentData[] = data.results.map((result: string) => {
-      try {
-        return JSON.parse(result);
-      } catch (parseError) {
-        throw new Error(
-          `Error parsing processed layer result: ${result}. Error: ${parseError}`
-        );
-      }
+    const processed: ComponentData[] = data.results.map((result: any) => {
+      return result as ComponentData;
     });
 
     return processed;
