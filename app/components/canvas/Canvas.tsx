@@ -21,7 +21,7 @@ const Canvas = () => {
   const [redoStack, setRedoStack] = useState<Action[]>([]);
   const [loading, setLoading] = useState(true);
 
-  const { layers, setLayers } = useLayers();
+  const { layers, setLayers, syncLayersWithBackend } = useLayers();
 
   useEffect(() => {
     if (canvasRef.current) {
@@ -228,6 +228,8 @@ const Canvas = () => {
     setIsDrawing(false);
     lastPosition.current = null;
     updateMainCanvas();
+
+    syncLayersWithBackend();
   };
 
   const handleUndo = () => {

@@ -1,12 +1,6 @@
 "use client";
 
-import React, {
-  createContext,
-  useContext,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import React, { createContext, useContext, useRef, useState } from "react";
 import processLayers from "../api/processLayer";
 import { ComponentData } from "../class/ComponentData";
 
@@ -14,6 +8,7 @@ interface LayersContextType {
   layers: Layer[];
   setLayers: React.Dispatch<React.SetStateAction<Layer[]>>;
   processedLayers: ComponentData[];
+  syncLayersWithBackend: () => void;
 }
 
 const LayersContext = createContext<LayersContextType | undefined>(undefined);
@@ -25,29 +20,22 @@ export const LayersProvider: React.FC<{ children: React.ReactNode }> = ({
   const [processedLayers, setProcessedLayers] = useState<ComponentData[]>([]);
   const prevLayersRef = useRef<Layer[]>([]);
 
-  useEffect(() => {
-    const changedLayers = layers.filter((layer, i) => {
-      const prevLayer = prevLayersRef.current[i];
-      return (
-        !prevLayer ||
-        prevLayer.canvas !== layer.canvas ||
-        prevLayer.title !== layer.title
-      );
+  const syncLayersWithBackend = () => {
+    console.log("Calling backend with layers:", layers);
+
+    processLayers(layers).then((result) => {
+      if (result) {
+        setProcessedLayers(result);
+      }
     });
 
-    if (changedLayers.length > 0) {
-      processLayers(changedLayers).then((result) => {
-        if (result) {
-          setProcessedLayers(result);
-        }
-      });
-    }
-
     prevLayersRef.current = layers;
-  }, [layers]);
+  };
 
   return (
-    <LayersContext.Provider value={{ layers, setLayers, processedLayers }}>
+    <LayersContext.Provider
+      value={{ layers, setLayers, processedLayers, syncLayersWithBackend }}
+    >
       {children}
     </LayersContext.Provider>
   );
