@@ -21,8 +21,6 @@ export const LayersProvider: React.FC<{ children: React.ReactNode }> = ({
   const prevLayersRef = useRef<Layer[]>([]);
 
   const syncLayersWithBackend = () => {
-    console.log("Calling backend with layers:", layers);
-
     processLayers(layers).then((result) => {
       if (result) {
         setProcessedLayers(result);

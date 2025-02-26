@@ -1,19 +1,23 @@
-import React from "react";
+import React, { CSSProperties } from "react";
 import { Card, CardHeader, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { RenderComponentProps } from "./utils.d";
+import { RenderComponentProps } from "./RenderComponent.d";
 import { ComponentData } from "@/app/class/ComponentData";
 
 const RenderComponent: React.FC<RenderComponentProps> = ({ componentData }) => {
   const { title, x, y, width, height, children } = componentData;
 
-  const positionClasses = `absolute left-[${x}px] top-[${y}px] w-[${width}px] h-[${height}px]`;
-
+  const positionStyle: CSSProperties = {
+    position: "absolute",
+    left: `${x}px`,
+    top: `${y}px`,
+    width: `${width}px`,
+    height: `${height}px`,
+  };
   switch (title) {
-    case "Card":
+    case "Box":
       return (
-        <Card className={positionClasses}>
-          <CardHeader>{title}</CardHeader>
+        <Card style={positionStyle}>
           <CardContent>
             {children &&
               children.map((child: ComponentData) => (
@@ -23,7 +27,7 @@ const RenderComponent: React.FC<RenderComponentProps> = ({ componentData }) => {
         </Card>
       );
     case "Button":
-      return <Button className={positionClasses}>{title}</Button>;
+      return <Button style={positionStyle}>{title}</Button>;
     default:
       return null;
   }
