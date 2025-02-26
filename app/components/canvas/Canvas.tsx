@@ -337,7 +337,7 @@ const Canvas = () => {
 
   return (
     <div className="select-none flex-1 h-[100%] flex items-center justify-center">
-      <div className="box-border canvas w-[92%] h-[92%] rounded-[16px] bg-[var(--canvas-menu-bg)] flex flex-col overflow-hidden">
+      <div className="box-border canvas w-[93%] h-[95%] rounded-[16px] bg-[var(--canvas-menu-bg)] flex flex-col overflow-hidden">
         <div className="canvas-border__bottom bg-[var(--canvas-bg)] w-[100%] rounded-[16px] p-[3px] shrink-0">
           <div className="justify-between canvas-border rounded-[12px] items-center bg-[var(--canvas-menu-bg)] flex px-[0.9em] py-[0.5em] w-[100%]">
             <div className="gap-x-[1em] flex">

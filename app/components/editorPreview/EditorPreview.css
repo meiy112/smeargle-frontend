@@ -1,5 +1,5 @@
 .editor-preview {
-  border-left: 1px solid var(--border);
+  border-left: 1px solid var(--border__medium);
 }
 
 .editor {

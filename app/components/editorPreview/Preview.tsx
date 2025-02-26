@@ -20,7 +20,7 @@ const Preview = () => {
       <img
         src="./grid.svg"
         alt="grid"
-        className="absolute z-[-1] h-[100%] object-cover left-0"
+        className="absolute z-[-1] h-[100vh] object-cover left-0"
       />
     </div>
   );
