@@ -1,3 +1,4 @@
+import { throttle } from "lodash";
 import { ComponentData } from "../class/ComponentData";
 
 async function processLayers(layers: Layer[]): Promise<ComponentData[] | null> {
@@ -24,6 +25,7 @@ async function processLayers(layers: Layer[]): Promise<ComponentData[] | null> {
     let data;
     try {
       data = JSON.parse(responseText);
+      data = convertSnakeToCamel(data);
     } catch (jsonParseError) {
       throw new Error(`Failed to parse JSON. Full response: ${responseText}`);
     }
@@ -39,4 +41,24 @@ async function processLayers(layers: Layer[]): Promise<ComponentData[] | null> {
   }
 }
 
-export default processLayers;
+const throttledProcessLayers = throttle(processLayers, 1000, {
+  leading: true,
+  trailing: false,
+});
+
+export default throttledProcessLayers;
+
+function convertSnakeToCamel(obj: any): any {
+  if (Array.isArray(obj)) {
+    return obj.map((v) => convertSnakeToCamel(v));
+  } else if (obj !== null && obj.constructor === Object) {
+    return Object.keys(obj).reduce((result, key) => {
+      const camelKey = key.replace(/_([a-z])/g, (_, letter) =>
+        letter.toUpperCase()
+      );
+      result[camelKey] = convertSnakeToCamel(obj[key]);
+      return result;
+    }, {} as any);
+  }
+  return obj;
+}
