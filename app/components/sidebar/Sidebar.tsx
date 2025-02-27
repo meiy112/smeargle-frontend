@@ -18,7 +18,7 @@ const Sidebar = () => {
 
   return (
     <div className="select-none relative h-[100%] side-bar">
-      <img src="./logo.svg" alt="Logo" />
+      <img src="./smeargle-logo.svg" alt="Logo" className="w-[1.4em]" />
       <div className="side-bar__buttons">
         <Button
           child={

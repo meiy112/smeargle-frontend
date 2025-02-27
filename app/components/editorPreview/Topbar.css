@@ -1,5 +1,5 @@
 .topbar {
-  border-bottom: 1px solid var(--border);
-  border-left: 1px solid var(--border);
+  border-bottom: 1px solid var(--border__medium);
+  /* border-left: 1px solid var(--border); */
   background: var(--editor-bg);
 }

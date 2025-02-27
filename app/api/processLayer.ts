@@ -21,7 +21,6 @@ async function processLayers(layers: Layer[]): Promise<ComponentData[] | null> {
     }
 
     const responseText = await response.text();
-    console.log(responseText);
     let data;
     try {
       data = JSON.parse(responseText);

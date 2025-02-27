@@ -11,11 +11,11 @@ export default function Home() {
           <Sidebar />
           <Canvas />
           <EditorPreview />
-          <img
+          {/* <img
             src="./grid.svg"
             alt="grid"
             className="absolute z-[-1] h-[100%]"
-          />
+          /> */}
         </main>
       </div>
     </LayersProvider>

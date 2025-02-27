@@ -1,6 +1,6 @@
-/* .editor-preview {
-  border-left: 1px solid var(--border);
-} */
+.editor-preview {
+  border-left: 1px solid var(--border__medium);
+}
 
 .editor {
   background: var(--editor-bg);
