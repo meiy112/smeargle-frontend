@@ -1,7 +1,7 @@
 import React, { CSSProperties } from "react";
 import { Card, CardHeader, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { RenderComponentProps } from "./RenderComponent.d";
+import { RenderComponentProps } from "./utils.d";
 import { ComponentData } from "@/app/class/ComponentData";
 
 const RenderComponent: React.FC<RenderComponentProps> = ({ componentData }) => {

@@ -420,12 +420,18 @@ const Canvas = () => {
               onMouseMove={handleMouseMove}
               onMouseUp={handleMouseUp}
               onMouseOut={handleMouseUp}
+              className="relative z-[1]"
             />
             {loading && (
               <div className="absolute text-white bg-[var(--canvas-bg)] h-[100%] w-[100%] flex items-center justify-center">
                 Loading...
               </div>
             )}
+            <img
+              src="./grid.svg"
+              alt="grid"
+              className="absolute h-[100vh] object-cover left-0"
+            />
           </div>
         </div>
       </div>
