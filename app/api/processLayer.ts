@@ -1,3 +1,4 @@
+import { throttle } from "lodash";
 import { ComponentData } from "../class/ComponentData";
 
 async function processLayers(layers: Layer[]): Promise<ComponentData[] | null> {
@@ -39,4 +40,9 @@ async function processLayers(layers: Layer[]): Promise<ComponentData[] | null> {
   }
 }
 
-export default processLayers;
+const throttledProcessLayers = throttle(processLayers, 1000, {
+  leading: true,
+  trailing: false,
+});
+
+export default throttledProcessLayers;
