@@ -4,7 +4,7 @@
 
 :root {
   --border: #28272c;
-  --border__medium: #36353a;
+  --border__medium: #333333;
   --border__light: #484848;
   --border-radius: 9px;
   --border-radius__s: 7px;
@@ -13,7 +13,7 @@
   --hover-bg: rgba(255, 255, 255, 0.1);
   --hover-bg__solid: #272728;
   --purple: #855fff;
-  --editor-bg: #0f0f10;
+  --editor-bg: #000000;
 }
 
 html,
@@ -34,7 +34,7 @@ body {
 
 @layer base {
   :root {
-    --background: #0f0f10;
+    --background: #000000;
     --foreground: white;
     --card-foreground: white;
     --popover: 0 0% 100%;
@@ -94,4 +94,16 @@ body {
   body {
     @apply bg-background text-foreground;
   }
+}
+
+.resize-bar {
+  background: var(--border);
+}
+
+.topbar {
+  border-bottom: 1px solid var(--border);
+  /* border-left: 1px solid var(--border); */
+  background: var(--editor-bg);
+  height: 3.5em;
+  padding: 0 0.7em;
 }

@@ -1,4 +1,3 @@
-"use client";
 import { useCallback, useEffect, useRef, useState } from "react";
 import Dropdown from "../lib/dropdown/Dropdown";
 import "./Canvas.css";
@@ -336,103 +335,101 @@ const Canvas = () => {
   };
 
   return (
-    <div className="select-none flex-1 h-[100%] flex items-center justify-center">
-      <div className="box-border canvas w-[93%] h-[95%] rounded-[16px] bg-[var(--canvas-menu-bg)] flex flex-col overflow-hidden">
-        <div className="canvas-border__bottom bg-[var(--canvas-bg)] w-[100%] rounded-[16px] p-[3px] shrink-0">
-          <div className="justify-between canvas-border rounded-[12px] items-center bg-[var(--canvas-menu-bg)] flex px-[0.9em] py-[0.5em] w-[100%]">
-            <div className="gap-x-[1em] flex">
-              <Dropdown
-                value={LAYERS[currentLayer]}
-                options={LAYERS}
-                onChange={onSetLayer}
-              />
-              <Button
-                child={
-                  <div className="icon">
-                    <img src="./pen.svg" alt="pen" />
-                  </div>
-                }
-                onClick={() => setTool("draw")}
-                selected={tool === "draw"}
-                background={"var(--purple)"}
-                changeOpacity={true}
-              />
-              <Button
-                child={
-                  <div className="icon">
-                    <img src="./erasor.svg" alt="erasor" />
-                  </div>
-                }
-                onClick={() => setTool("erase")}
-                selected={tool === "erase"}
-                background={"var(--purple)"}
-                changeOpacity={true}
-              />
-              <Button
-                child={
-                  <div className="icon">
-                    <img src="./bucket.svg" alt="bucket" />
-                  </div>
-                }
-                onClick={() => setTool("bucket")}
-                selected={tool === "bucket"}
-                background={"var(--purple)"}
-                changeOpacity={true}
-              />
-              <ColorPicker color={color} setColor={setColor} />
-              <Slider
-                value={lineWidth}
-                max={10}
-                min={1}
-                handleChange={(value: number) => setLineWidth(value)}
-                width="7em"
-              />
-            </div>
-            <div className="gap-x-[1em] flex">
-              <Button
-                child={
-                  <div className="icon">
-                    <img src="./undo.svg" alt="undo" />
-                  </div>
-                }
-                onClick={handleUndo}
-                disabled={undoStack.length === 0}
-              />
-              <Button
-                child={
-                  <div className="icon">
-                    <img src="./redo.svg" alt="redo" />
-                  </div>
-                }
-                onClick={handleRedo}
-                disabled={redoStack.length === 0}
-              />
-            </div>
+    <div className="box-border canvas w-[93%] h-[95%] rounded-[16px] bg-[var(--canvas-menu-bg)] flex flex-col overflow-hidden">
+      <div className="canvas-border__bottom bg-[var(--canvas-bg)] w-[100%] rounded-[16px] p-[3px] shrink-0">
+        <div className="justify-between canvas-border rounded-[12px] items-center bg-[var(--canvas-menu-bg)] flex px-[0.9em] py-[0.5em] w-[100%]">
+          <div className="gap-x-[1em] flex">
+            <Dropdown
+              value={LAYERS[currentLayer]}
+              options={LAYERS}
+              onChange={onSetLayer}
+            />
+            <Button
+              child={
+                <div className="icon">
+                  <img src="./pen.svg" alt="pen" />
+                </div>
+              }
+              onClick={() => setTool("draw")}
+              selected={tool === "draw"}
+              background={"var(--purple)"}
+              changeOpacity={true}
+            />
+            <Button
+              child={
+                <div className="icon">
+                  <img src="./erasor.svg" alt="erasor" />
+                </div>
+              }
+              onClick={() => setTool("erase")}
+              selected={tool === "erase"}
+              background={"var(--purple)"}
+              changeOpacity={true}
+            />
+            <Button
+              child={
+                <div className="icon">
+                  <img src="./bucket.svg" alt="bucket" />
+                </div>
+              }
+              onClick={() => setTool("bucket")}
+              selected={tool === "bucket"}
+              background={"var(--purple)"}
+              changeOpacity={true}
+            />
+            <ColorPicker color={color} setColor={setColor} />
+            <Slider
+              value={lineWidth}
+              max={10}
+              min={1}
+              handleChange={(value: number) => setLineWidth(value)}
+              width="7em"
+            />
+          </div>
+          <div className="gap-x-[1em] flex">
+            <Button
+              child={
+                <div className="icon">
+                  <img src="./undo.svg" alt="undo" />
+                </div>
+              }
+              onClick={handleUndo}
+              disabled={undoStack.length === 0}
+            />
+            <Button
+              child={
+                <div className="icon">
+                  <img src="./redo.svg" alt="redo" />
+                </div>
+              }
+              onClick={handleRedo}
+              disabled={redoStack.length === 0}
+            />
           </div>
         </div>
-        <div className="flex-grow flex w-[100%] p-[3px] pb-[4.5px] shrink-0">
-          <div className="canvas-border rounded-[12px] bg-[var(--canvas-bg)] h-[100%] w-[100%] flex items-center justify-center relative overflow-hidden">
-            <canvas
-              ref={canvasRef}
-              width="100%"
-              height="100%"
-              onMouseDown={handleMouseDown}
-              onMouseMove={handleMouseMove}
-              onMouseUp={handleMouseUp}
-              onMouseOut={handleMouseUp}
-              className="relative z-[1]"
-            />
-            {loading && (
-              <div className="absolute text-white bg-[var(--canvas-bg)] h-[100%] w-[100%] flex items-center justify-center">
-                Loading...
-              </div>
-            )}
-            <img
-              src="./grid.svg"
-              alt="grid"
-              className="absolute h-[100vh] object-cover left-0"
-            />
-          </div>
+      </div>
+      <div className="flex-grow flex w-[100%] p-[3px] pb-[4.5px] shrink-0">
+        <div className="canvas-border rounded-[12px] bg-[var(--canvas-bg)] h-[100%] w-[100%] flex items-center justify-center relative overflow-hidden">
+          <canvas
+            ref={canvasRef}
+            width="100%"
+            height="100%"
+            onMouseDown={handleMouseDown}
+            onMouseMove={handleMouseMove}
+            onMouseUp={handleMouseUp}
+            onMouseOut={handleMouseUp}
+            className="relative z-[1]"
+          />
+          {loading && (
+            <div className="absolute text-white bg-[var(--canvas-bg)] h-[100%] w-[100%] flex items-center justify-center">
+              Loading...
+            </div>
+          )}
+          <img
+            src="./grid.svg"
+            alt="grid"
+            className="absolute h-[100vh] object-cover left-0"
+          />
         </div>
       </div>
     </div>

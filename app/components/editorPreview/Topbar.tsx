@@ -1,8 +1,7 @@
 import { Dispatch, SetStateAction } from "react";
 import Button from "../lib/button/Button";
-import "./Topbar.css";
 
-const BUTTONS = ["Preview", "Code", "Console"];
+const BUTTONS = ["Preview", "Code", "Presets", "Console"];
 
 const Topbar = ({
   page,
@@ -16,7 +15,7 @@ const Topbar = ({
   };
 
   return (
-    <div className="topbar w-[100%] text-[0.85rem] p-[0.7em] font-medium flex justify-between items-center">
+    <div className="select-none topbar w-[100%] text-[0.85rem] font-medium flex justify-between items-center">
       <div className="flex gap-x-[0.65em] items-center">
         {BUTTONS.map((label, index) => (
           <Button

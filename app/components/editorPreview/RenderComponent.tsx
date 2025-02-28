@@ -4,11 +4,7 @@ import { Button } from "@/components/ui/button";
 import { RenderComponentProps } from "./utils.d";
 import { ComponentData } from "@/app/class/ComponentData";
 
-const RenderComponent: React.FC<RenderComponentProps> = ({
-  componentData,
-  parentX = 0,
-  parentY = 0,
-}) => {
+const RenderComponent: React.FC<RenderComponentProps> = ({ componentData }) => {
   const {
     title,
     x,
@@ -29,8 +25,8 @@ const RenderComponent: React.FC<RenderComponentProps> = ({
 
   const positionStyle: CSSProperties = {
     position: "absolute",
-    left: `${x - parentX}px`,
-    top: `${y - parentY}px`,
+    left: `${x}px`,
+    top: `${y}px`,
     width: `${width}px`,
     height: `${height}px`,
   };

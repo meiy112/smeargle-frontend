@@ -1,6 +1,7 @@
 import { useLayers } from "@/app/context/LayersProvider";
 import RenderComponent from "./RenderComponent";
 import { useEffect } from "react";
+import "./EditorPreview.css";
 
 const Preview = () => {
   const { processedLayers } = useLayers();
@@ -20,7 +21,7 @@ const Preview = () => {
       <img
         src="./grid.svg"
         alt="grid"
-        className="absolute z-[-1] h-[100vh] object-cover left-0"
+        className="absolute z-[-1] preview-bg h-[100vh] object-cover left-0"
       />
     </div>
   );
