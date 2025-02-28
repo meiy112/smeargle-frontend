@@ -1,0 +1,3 @@
+.resizable-canvas-container {
+  transition: filter 0.2s ease-out, background-color 0.2s ease-out;
+}
