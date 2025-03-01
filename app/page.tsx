@@ -1,5 +1,4 @@
 "use client";
-import { useRef, useState } from "react";
 import ResizableCanvasContainer from "./components/canvas/ResizableCanvasContainer";
 import EditorPreview from "./components/editorPreview/EditorPreview";
 import Sidebar from "./components/sidebar/Sidebar";
