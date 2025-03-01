@@ -17,6 +17,18 @@ const Topbar = ({
   return (
     <div className="select-none topbar w-[100%] text-[0.85rem] font-medium flex justify-between items-center">
       <div className="flex gap-x-[0.65em] items-center">
+        <Button
+          child={
+            <div className="flex px-[0.2em] py-[0.2em]">
+              <img src="chevrons-left.svg" alt="full" />
+            </div>
+          }
+          onClick={() => console.log("full screen clicked")}
+          changeOpacity={true}
+          key={"full"}
+          background="var(--hover-bg__solid)"
+          outlined={false}
+        />
         {BUTTONS.map((label, index) => (
           <Button
             child={
