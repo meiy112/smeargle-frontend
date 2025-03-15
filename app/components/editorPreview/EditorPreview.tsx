@@ -9,7 +9,7 @@ const EditorPreview = () => {
   const [page, setPage] = useState("Preview");
 
   return (
-    <div className="overflow-hidden h-[100%] flex-1 flex-col box-border editor-preview">
+    <div className="grow overflow-hidden h-[100%] flex-1 flex-col box-border editor-preview">
       <Topbar page={page} setPage={setPage} />
       <Preview />
     </div>

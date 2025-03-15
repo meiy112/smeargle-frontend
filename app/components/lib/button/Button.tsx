@@ -32,7 +32,7 @@ const Button = ({
           : `1px solid rgba(0, 0, 0, 0)`,
       }}
     >
-      <div style={{ opacity: changeOpacity && !selected ? 0.5 : 1 }}>
+      <div style={{ opacity: changeOpacity && !selected ? 0.6 : 1 }}>
         {child}
       </div>
     </button>

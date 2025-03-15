@@ -1,6 +1,7 @@
 .canvas {
   border: 1px solid var(--border__light);
   font-size: 0.85rem;
+  z-index: 1;
 }
 
 .color-picker {

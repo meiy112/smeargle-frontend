@@ -335,7 +335,7 @@ const Canvas = () => {
   };
 
   return (
-    <div className="box-border canvas w-[93%] h-[95%] rounded-[16px] bg-[var(--canvas-menu-bg)] flex flex-col overflow-hidden">
+    <div className="box-border canvas flex-1 h-full rounded-[16px] bg-[var(--canvas-menu-bg)] flex flex-col overflow-hidden">
       <div className="canvas-border__bottom bg-[var(--canvas-bg)] w-[100%] rounded-[16px] p-[3px] shrink-0">
         <div className="justify-between canvas-border rounded-[12px] items-center bg-[var(--canvas-menu-bg)] flex px-[0.9em] py-[0.5em] w-[100%]">
           <div className="gap-x-[1em] flex">
@@ -408,7 +408,7 @@ const Canvas = () => {
           </div>
         </div>
       </div>
-      <div className="flex-grow flex w-[100%] p-[3px] pb-[4.5px] shrink-0">
+      <div className="flex-grow flex w-[100%] p-[3px] shrink-0">
         <div className="canvas-border rounded-[12px] bg-[var(--canvas-bg)] h-[100%] w-[100%] flex items-center justify-center relative overflow-hidden">
           <canvas
             ref={canvasRef}
